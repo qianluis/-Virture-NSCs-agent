@@ -1,0 +1,34 @@
+# Core (required)
+numpy>=1.24.0
+scipy>=1.10.0
+matplotlib>=3.7.0
+pandas>=2.0.0
+requests>=2.31.0
+
+# Literature search (required)
+biopython>=1.81
+arxiv>=4.0.0
+
+# Data parsing (required)
+python-libsbml>=5.19.0
+pysb>=1.13.0
+networkx>=3.0
+
+# Simulation (required)
+tellurium>=2.2.0
+
+# Optional: AI models
+# torch>=2.0.0
+# transformers>=4.30.0
+# scgpt>=0.1.0
+
+# Optional: Causal inference
+# dowhy>=0.11
+
+# Optional: Single-cell analysis
+# scanpy>=1.9.0
+# anndata>=0.9.0
+
+# Development
+pytest>=7.0
+jupyter>=1.0

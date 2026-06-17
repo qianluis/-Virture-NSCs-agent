@@ -1,0 +1,55 @@
+# VirtualCell-Agent Configuration
+
+agent:
+  name: "VirtualCell-Agent"
+  version: "1.0.0"
+  focus_cell_type: "neural_stem_cell"
+  temperature: 0.0  # Deterministic output
+  seed: 42
+  hardware_auto_detect: true
+
+skills:
+  literature:
+    enabled: true
+    sources: ["pubmed", "arxiv", "semantic"]
+    max_papers_per_source: 20
+
+  data_parser:
+    enabled: true
+    max_sbml_size_mb: 50
+
+  simulator:
+    enabled: true
+    default_duration: 50
+    default_points: 500
+
+  ai_predictor:
+    enabled: true
+    gpu_min_memory_gb: 8
+    default_model: "geneformer"
+    available_models: ["geneformer", "scgpt"]
+
+  perturbation:
+    enabled: true
+    require_baseline_comparison: true
+    metric_threshold: 0.05  # AI must beat baseline by this margin
+
+tools:
+  pubmed:
+    email: "agent@virtualcell.ai"
+  semantic_scholar:
+    api_key: ""  # Optional
+  string_db:
+    api_url: "https://string-db.org/api"
+
+knowledge:
+  base_path: "../knowledge/neural_stem_cell"
+  files:
+    marker_genes: "marker_genes.md"
+    signaling_pathways: "signaling_pathways.md"
+    disease_models: "disease_models.md"
+
+output:
+  directory: "../output"
+  format: "markdown"
+  template: "default"

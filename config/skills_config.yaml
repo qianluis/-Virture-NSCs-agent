@@ -1,0 +1,41 @@
+# VirtualCell-Agent Skills Configuration
+
+skills:
+  literature:
+    description: "PubMed/arXiv/Semantic Scholar 文献检索"
+    install:
+      pip: ["biopython", "arxiv", "requests"]
+    scripts:
+      main: "../skills/literature/scripts/search_literature.py"
+      help: "python search_literature.py --query '...' --sources pubmed,arxiv --limit 20"
+
+  data_parser:
+    description: "scRNA-seq + SBML/BioNetGen 数据解析"
+    install:
+      pip: ["scanpy", "anndata", "python-libsbml", "pysb", "networkx"]
+    scripts:
+      parse_sc: "../skills/data_parser/scripts/parse_scdata.py"
+      parse_sbml: "../skills/data_parser/scripts/parse_sbml.py"
+
+  simulator:
+    description: "Tellurium/RoadRunner ODE 通路仿真"
+    install:
+      pip: ["tellurium", "python-libsbml", "matplotlib"]
+    scripts:
+      main: "../skills/simulator/scripts/run_simulation.py"
+
+  ai_predictor:
+    description: "scGPT / Geneformer 单细胞基础模型推理"
+    install:
+      pip: ["torch", "transformers", "scgpt"]
+    scripts:
+      main: "../skills/ai_predictor/scripts/run_ai_model.py"
+    gpu_required: true
+
+  perturbation:
+    description: "基因/药物扰动响应预测 + 基线验证"
+    install:
+      pip: ["numpy", "scipy", "pandas"]
+    scripts:
+      main: "../skills/perturbation/scripts/predict_perturbation.py"
+    require_baseline: true

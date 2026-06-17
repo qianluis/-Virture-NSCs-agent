@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+.env
+*.egg-info/
+dist/
+build/
+.vscode/
+.idea/
+*.h5ad
+*.sbml
+*.npy
+output/*.md
