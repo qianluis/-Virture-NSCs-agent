@@ -135,12 +135,12 @@ def simulate_grn(target_gene: str = "", perturbation: str = "") -> dict:
                 fold_changes[gene] = round(fc, 4)
         result["fold_changes"] = fold_changes
 
-        # Classify — lower thresholds since ODE changes are subtle but biologically meaningful
-        # Use the GRN's own top_gene list if available
+        # Classify — fold-change model produces biologically meaningful effect sizes
+        # |FC|>0.10 is a reliable signal
         for gene, fc in fold_changes.items():
-            if fc > 0.02:
+            if fc > 0.10:
                 result["upregulated"].append(gene)
-            elif fc < -0.02:
+            elif fc < -0.10:
                 result["downregulated"].append(gene)
 
         # Image paths from simulation
