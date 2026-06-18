@@ -163,10 +163,56 @@ def compute_production(y, act_map, rep_map, basal_vec):
         prod[i] = (basal_vec[i] + act) * fold_rep
     return prod
 
+# ── miRNA-mediated regulation (Shenoy & Blelloch 2014, Nat Rev Neurosci) ──
+
+def compute_mirna(y):
+    """
+    Calculate miRNA levels — post-transcriptional fate switching layer.
+    
+    miR-124: transcribed by ASCL1+NEUROG2, targets SOX2 3'UTR
+    miR-9:   transcribed by ASCL1, targets HES1 3'UTR
+    
+    Papers:
+    - Shenoy & Blelloch 2014 (Nat Rev Neurosci)
+    - Cao et al. 2013 (Nature)
+    - Sun et al. 2013 (Mol Cell Biol)
+    """
+    asc = max(0.0, y[GENE2IDX["ASCL1"]])
+    ng2 = max(0.0, y[GENE2IDX["NEUROG2"]])
+    mir124 = hill_activate(asc + ng2, 1.0, 0.5, 2)
+    mir9 = hill_activate(asc + 0.01, 0.8, 0.4, 2)
+    return {"mir124": mir124, "mir9": mir9}
+
+
+def apply_mirna_to_dydt(dydt, y, mirna):
+    """
+    Michaelis-Menten miRNA silencing effects.
+    
+    miR-124 -> SOX2: d[SOX2] -= 0.8 * mir124 * SOX2 / (SOX2 + 0.3)
+    miR-9   -> HES1:  d[HES1]  -= 0.6 * mir9   * HES1  / (HES1 + 0.3)
+    """
+    sox_idx = GENE2IDX.get("SOX2")
+    hes1_idx = GENE2IDX.get("HES1")
+    if sox_idx is not None:
+        sv = max(0.0, y[sox_idx])
+        dydt[sox_idx] -= 0.8 * mirna["mir124"] * sv / (sv + 0.3)
+    if hes1_idx is not None:
+        hv = max(0.0, y[hes1_idx])
+        dydt[hes1_idx] -= 0.6 * mirna["mir9"] * hv / (hv + 0.3)
+    return dydt
+
+
 def grn_ode(t, y, basal_vec, deg_vec, act_map, rep_map):
-    """Deterministic ODE."""
+    """
+    Deterministic ODE with miRNA post-transcriptional regulation.
+    
+    Shenoy & Blelloch 2014: miRNA layer is critical for NSC fate switching
+    """
     prod = compute_production(y, act_map, rep_map, basal_vec)
-    return prod - deg_vec * y
+    dydt = prod - deg_vec * y
+    mirna = compute_mirna(y)
+    dydt = apply_mirna_to_dydt(dydt, y, mirna)
+    return dydt
 
 def grn_sde(t, y, basal_vec, deg_vec, act_map, rep_map, noise_scale=0.1, cell_volume=1.0):
     """
@@ -185,6 +231,11 @@ def grn_sde(t, y, basal_vec, deg_vec, act_map, rep_map, noise_scale=0.1, cell_vo
     
     # Deterministic drift
     drift = prod - degradation
+    
+    # Apply miRNA post-transcriptional regulation to drift term only
+    # (miRNA affects deterministic dynamics; noise from miRNA is negligible)
+    mirna = compute_mirna(y)
+    drift = apply_mirna_to_dydt(drift.copy(), y, mirna)
     
     # Stochastic diffusion (Chemical Langevin)
     # sqrt of sum of birth and death rates, scaled by volume
