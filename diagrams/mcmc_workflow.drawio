@@ -1,0 +1,90 @@
+<?xml version="1.0" ?>
+<mxfile host="app.diagrams.net">
+  <diagram id="91f0a8f4e12aa866" name="MCMC Workflow">
+    <mxGraphModel dx="0" dy="0" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="440" background="#ffffff">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="wf_title" value="&amp;lt;b&amp;gt;VirtualCell Parameter Estimation &amp;amp;amp; Validation Workflow&amp;lt;/b&amp;gt;" style="text;html=1;fontSize=15;fontStyle=1;align=center;fillColor=none;strokeColor=none;" parent="1" vertex="1">
+          <mxGeometry x="0" y="10" width="1400" height="30" as_="geometry"/>
+        </mxCell>
+        <mxCell id="s0" value="&amp;lt;b&amp;gt;📖 Literature Curation&amp;lt;/b&amp;gt;&amp;lt;br&amp;gt;&amp;lt;font style=&amp;apos;font-size:8px&amp;apos;&amp;gt;Andersen 2021 · Imayoshi 2010
+Gao 2009 · Zhang 2019&amp;lt;/font&amp;gt;" style="rounded=1;html=1;fontSize=10;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fillColor=#FFF3E0;strokeColor=#EF6C00;" parent="1" vertex="1">
+          <mxGeometry x="50" y="60" width="180" height="70" as_="geometry"/>
+        </mxCell>
+        <mxCell id="s1" value="&amp;lt;b&amp;gt;🧬 GRN ODE Model&amp;lt;/b&amp;gt;&amp;lt;br&amp;gt;&amp;lt;font style=&amp;apos;font-size:8px&amp;apos;&amp;gt;22 genes, fold-change repression
+Hill function dynamics&amp;lt;/font&amp;gt;" style="rounded=1;html=1;fontSize=10;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fillColor=#D4E6F1;strokeColor=#2C6E9C;" parent="1" vertex="1">
+          <mxGeometry x="300" y="60" width="180" height="70" as_="geometry"/>
+        </mxCell>
+        <mxCell id="s2" value="&amp;lt;b&amp;gt;🔄 Steady-State Solver&amp;lt;/b&amp;gt;&amp;lt;br&amp;gt;&amp;lt;font style=&amp;apos;font-size:8px&amp;apos;&amp;gt;scipy.integrate.odeint
+t=500, rtol=1e-6&amp;lt;/font&amp;gt;" style="rounded=1;html=1;fontSize=10;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fillColor=#D4E6F1;strokeColor=#2C6E9C;" parent="1" vertex="1">
+          <mxGeometry x="550" y="60" width="180" height="70" as_="geometry"/>
+        </mxCell>
+        <mxCell id="s3" value="&amp;lt;b&amp;gt;⚡ Apply Perturbation&amp;lt;/b&amp;gt;&amp;lt;br&amp;gt;&amp;lt;font style=&amp;apos;font-size:8px&amp;apos;&amp;gt;KO: basal=0, deg×3
+OE: basal×5, deg×0.3&amp;lt;/font&amp;gt;" style="rounded=1;html=1;fontSize=10;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fillColor=#D4E6F1;strokeColor=#2C6E9C;" parent="1" vertex="1">
+          <mxGeometry x="800" y="60" width="180" height="70" as_="geometry"/>
+        </mxCell>
+        <mxCell id="s4" value="&amp;lt;b&amp;gt;📊 Compute log₂FC&amp;lt;/b&amp;gt;&amp;lt;br&amp;gt;&amp;lt;font style=&amp;apos;font-size:8px&amp;apos;&amp;gt;log2(perturbed/control)
+z-score normalization&amp;lt;/font&amp;gt;" style="rounded=1;html=1;fontSize=10;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fillColor=#FCE4EC;strokeColor=#C62828;" parent="1" vertex="1">
+          <mxGeometry x="50" y="170" width="180" height="70" as_="geometry"/>
+        </mxCell>
+        <mxCell id="s5" value="&amp;lt;b&amp;gt;🎯 Parameter Fitting&amp;lt;/b&amp;gt;&amp;lt;br&amp;gt;&amp;lt;font style=&amp;apos;font-size:8px&amp;apos;&amp;gt;Nelder-Mead (12 params)
+MCMC (44 params, 16×500)&amp;lt;/font&amp;gt;" style="rounded=1;html=1;fontSize=10;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fillColor=#FCE4EC;strokeColor=#C62828;" parent="1" vertex="1">
+          <mxGeometry x="300" y="170" width="180" height="70" as_="geometry"/>
+        </mxCell>
+        <mxCell id="s6" value="&amp;lt;b&amp;gt;🔬 Synthetic Validation&amp;lt;/b&amp;gt;&amp;lt;br&amp;gt;&amp;lt;font style=&amp;apos;font-size:8px&amp;apos;&amp;gt;Known → perturb → recover
+RMSE / Pearson r&amp;lt;/font&amp;gt;" style="rounded=1;html=1;fontSize=10;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fillColor=#FCE4EC;strokeColor=#C62828;" parent="1" vertex="1">
+          <mxGeometry x="550" y="170" width="180" height="70" as_="geometry"/>
+        </mxCell>
+        <mxCell id="s7" value="&amp;lt;b&amp;gt;📈 Benchmark Suite&amp;lt;/b&amp;gt;&amp;lt;br&amp;gt;&amp;lt;font style=&amp;apos;font-size:8px&amp;apos;&amp;gt;10 perturbations × 22 genes
+Heatmap generation&amp;lt;/font&amp;gt;" style="rounded=1;html=1;fontSize=10;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fillColor=#E8F5E9;strokeColor=#388E3C;" parent="1" vertex="1">
+          <mxGeometry x="50" y="280" width="180" height="70" as_="geometry"/>
+        </mxCell>
+        <mxCell id="s8" value="&amp;lt;b&amp;gt;🖼️ Paper Figures&amp;lt;/b&amp;gt;&amp;lt;br&amp;gt;&amp;lt;font style=&amp;apos;font-size:8px&amp;apos;&amp;gt;Fig1: Atlas · Fig2: Toggle
+Fig3: Topology · Fig4: Recovery&amp;lt;/font&amp;gt;" style="rounded=1;html=1;fontSize=10;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fillColor=#E8F5E9;strokeColor=#388E3C;" parent="1" vertex="1">
+          <mxGeometry x="300" y="280" width="180" height="70" as_="geometry"/>
+        </mxCell>
+        <mxCell id="s9" value="&amp;lt;b&amp;gt;📝 Report &amp;amp; Deliver&amp;lt;/b&amp;gt;&amp;lt;br&amp;gt;&amp;lt;font style=&amp;apos;font-size:8px&amp;apos;&amp;gt;Methods: §2.3 Parameter Est.
+Results: §3.3 Benchmark&amp;lt;/font&amp;gt;" style="rounded=1;html=1;fontSize=10;fontStyle=1;align=center;verticalAlign=middle;whiteSpace=wrap;fillColor=#E8F5E9;strokeColor=#388E3C;" parent="1" vertex="1">
+          <mxGeometry x="550" y="280" width="180" height="70" as_="geometry"/>
+        </mxCell>
+        <mxCell id="fs0_s1" value="targets" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;strokeWidth=1.5;endArrow=classic;fontSize=9;" parent="1" edge="1" source="s0" target="s1">
+          <mxGeometry relative="1" as_="geometry"/>
+        </mxCell>
+        <mxCell id="fs1_s2" value="ODE system" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;strokeWidth=1.5;endArrow=classic;fontSize=9;" parent="1" edge="1" source="s1" target="s2">
+          <mxGeometry relative="1" as_="geometry"/>
+        </mxCell>
+        <mxCell id="fs2_s3" value="steady state" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;strokeWidth=1.5;endArrow=classic;fontSize=9;" parent="1" edge="1" source="s2" target="s3">
+          <mxGeometry relative="1" as_="geometry"/>
+        </mxCell>
+        <mxCell id="fs3_s4" value="results" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;strokeWidth=1.5;endArrow=classic;fontSize=9;" parent="1" edge="1" source="s3" target="s4">
+          <mxGeometry relative="1" as_="geometry"/>
+        </mxCell>
+        <mxCell id="fs4_s5" value="log₂FC matrix" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;strokeWidth=1.5;endArrow=classic;fontSize=9;" parent="1" edge="1" source="s4" target="s5">
+          <mxGeometry relative="1" as_="geometry"/>
+        </mxCell>
+        <mxCell id="fs5_s6" value="best params" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;strokeWidth=1.5;endArrow=classic;fontSize=9;" parent="1" edge="1" source="s5" target="s6">
+          <mxGeometry relative="1" as_="geometry"/>
+        </mxCell>
+        <mxCell id="fs6_s7" value="validated" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;strokeWidth=1.5;endArrow=classic;fontSize=9;" parent="1" edge="1" source="s6" target="s7">
+          <mxGeometry relative="1" as_="geometry"/>
+        </mxCell>
+        <mxCell id="fs7_s8" value="data" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;strokeWidth=1.5;endArrow=classic;fontSize=9;" parent="1" edge="1" source="s7" target="s8">
+          <mxGeometry relative="1" as_="geometry"/>
+        </mxCell>
+        <mxCell id="fs8_s9" value="figures" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;strokeWidth=1.5;endArrow=classic;fontSize=9;" parent="1" edge="1" source="s8" target="s9">
+          <mxGeometry relative="1" as_="geometry"/>
+        </mxCell>
+        <mxCell id="fs3b_s7" value="perturbation results" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;strokeWidth=1.5;endArrow=classic;fontSize=9;" parent="1" edge="1" source="s3" target="s7">
+          <mxGeometry relative="1" as_="geometry"/>
+        </mxCell>
+        <mxCell id="fb" value="feedback (parameter refinement)" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;strokeWidth=1.5;endArrow=classic;fontSize=9;dashed=1;strokeColor=#C62828;" parent="1" edge="1" source="s7" target="s5">
+          <mxGeometry relative="1" as_="geometry"/>
+        </mxCell>
+        <mxCell id="wf_legend" value="&amp;lt;b&amp;gt;Color code:&amp;lt;/b&amp;gt; &amp;lt;font color=&amp;apos;#EF6C00&amp;apos;&amp;gt;■&amp;lt;/font&amp;gt; Curation &amp;lt;font color=&amp;apos;#2C6E9C&amp;apos;&amp;gt;■&amp;lt;/font&amp;gt; Simulation &amp;lt;font color=&amp;apos;#C62828&amp;apos;&amp;gt;■&amp;lt;/font&amp;gt; Fitting &amp;lt;font color=&amp;apos;#388E3C&amp;apos;&amp;gt;■&amp;lt;/font&amp;gt; Validation &amp;amp;amp; Output" style="text;html=1;fontSize=11;fillColor=none;strokeColor=none;align=center;" parent="1" vertex="1">
+          <mxGeometry x="200" y="390" width="1000" height="24" as_="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
