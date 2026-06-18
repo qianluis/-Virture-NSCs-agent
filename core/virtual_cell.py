@@ -1,8 +1,11 @@
-"""VirtualCell-Agent: 统一虚拟细胞引擎
+"""VirtualCell-Agent v5.0: 统一虚拟细胞引擎
 
-整合三大模拟模块：
+整合六大模块：
   morphology — 4 种细胞状态的逼真形态生成
-  grn_model — 22 基因的基因调控网络 ODE 仿真
+  grn_model — 22 基因的GRN (v4升级: 随机/侧向抑制/DPS/分岔)
+  landscape — Waddington表观遗传景观 (Wang 2022, Bhatt 2020)
+  morphogen_gradient — 形态发生素梯度生态位 (Ribes & Briscoe 2009)
+  scseq_projection — scRNA-seq 投影验证 (Llorens-Bobadilla 2015)
   niche_model — SVZ 生态位 ABM 空间群体动力学
 """
 
@@ -297,6 +300,75 @@ def analyze_perturbation(target_gene: str, perturbation: str) -> dict:
     return result
 
 
+# ─── 5. v5.0 Waddington Landscape Analysis ────────────────────────────
+
+
+def simulate_landscape() -> dict:
+    """
+    Run Waddington epigenetic landscape analysis.
+    
+    Paper: Wang 2022 (WIRES), Bhatt 2020 (Nat Rev Genet)
+    """
+    result = {"success": False, "figure": "", "attractors": [], "metrics": {}}
+    try:
+        from core import landscape
+        landscape_results = landscape.run_landscape_analysis()
+        result["figure"] = landscape_results.get("landscape_figure", "")
+        result["bifurcation_figure"] = landscape_results.get("bifurcation_figure", "")
+        result["attractors"] = landscape_results.get("attractors_by_condition", [])
+        result["success"] = True
+    except Exception as e:
+        logger.warning(f"Landscape analysis failed: {e}")
+    return result
+
+
+# ─── 6. v5.0 Morphogen Gradient Niche Simulation ──────────────────────
+
+
+def simulate_gradient_niche(n_cells: int = 20) -> dict:
+    """
+    Run morphogen gradient niche simulation.
+    
+    Paper: Ribes & Briscoe 2009 (Nat Rev Neurosci), Karr 2012 (Cell)
+    """
+    result = {"success": False, "figure": "", "final_stats": {}}
+    try:
+        from core import morphogen_gradient
+        niche_results = morphogen_gradient.run_niche_gradient_simulation(
+            n_cells=n_cells, n_steps=15
+        )
+        result["figure"] = niche_results.get("figures", ("", ""))[1]
+        result["gradient_figure"] = niche_results.get("figures", ("", ""))[0]
+        result["final_stats"] = niche_results["niche"]._get_stats()
+        result["success"] = True
+    except Exception as e:
+        logger.warning(f"Gradient niche failed: {e}")
+    return result
+
+
+# ─── 7. v5.0 scRNA-seq Projection ─────────────────────────────────────
+
+
+def simulate_scseq_projection(n_cells: int = 500) -> dict:
+    """
+    Run scRNA-seq projection analysis.
+    
+    Paper: Llorens-Bobadilla 2015 (Cell Stem Cell)
+    """
+    result = {"success": False, "figures": [], "metrics": {}}
+    try:
+        from core import scseq_projection
+        scseq_results = scseq_projection.run_scseq_analysis(
+            n_cells=n_cells
+        )
+        result["figures"] = scseq_results.get("figures", [])
+        result["metrics"] = scseq_results.get("metrics", {})
+        result["success"] = True
+    except Exception as e:
+        logger.warning(f"scRNA-seq projection failed: {e}")
+    return result
+
+
 def format_virtual_cell_report(result: dict) -> str:
     """Format virtual cell analysis result as Markdown report section."""
     lines = [
@@ -383,7 +455,9 @@ def main():
     parser = argparse.ArgumentParser(description="VirtualCell Engine")
     parser.add_argument("--target", "-t", default="", help="Target gene")
     parser.add_argument("--perturbation", "-p", default="", help="knock_out | overexpression | drug_inhibit")
-    parser.add_argument("--mode", "-m", default="full", choices=["full", "morphology", "grn", "niche"])
+    parser.add_argument("--mode", "-m", default="full",
+                        choices=["full", "morphology", "grn", "niche",
+                                 "landscape", "gradient", "scseq"])
     args = parser.parse_args()
 
     if args.mode == "morphology":
@@ -395,6 +469,22 @@ def main():
     elif args.mode == "niche":
         result = simulate_niche(steps=50)
         print(json.dumps(result, indent=2, default=str))
+    elif args.mode == "landscape":
+        print("[VirtualCell] 🌄 Waddington Landscape Analysis...")
+        result = simulate_landscape()
+        print(f"  Figure: {result.get('figure', 'N/A')}")
+    elif args.mode == "gradient":
+        print("[VirtualCell] 🧪 Morphogen Gradient Niche...")
+        result = simulate_gradient_niche()
+        print(f"  Figure: {result.get('figure', 'N/A')}")
+        print(f"  Stats: {result.get('final_stats', {})}")
+    elif args.mode == "scseq":
+        print("[VirtualCell] 🔬 scRNA-seq Projection...")
+        result = simulate_scseq_projection()
+        print(f"  Figures: {result.get('figures', [])}")
+        metrics = result.get("metrics", {})
+        print(f"  Pearson r: {metrics.get('pearson_r', 'N/A')}")
+        print(f"  AUC: {metrics.get('auc', 'N/A')}")
     else:
         result = analyze_perturbation(args.target, args.perturbation)
         print(format_virtual_cell_report(result))
