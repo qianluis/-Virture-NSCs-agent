@@ -11,3 +11,6 @@ build/
 *.npy
 output/*.md
 output/*.png
+output/*.json
+niche_output/
+nsc_morphology*.png
