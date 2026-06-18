@@ -10,3 +10,4 @@ build/
 *.sbml
 *.npy
 output/*.md
+output/*.png
