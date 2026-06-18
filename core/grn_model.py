@@ -265,7 +265,7 @@ def apply_perturbation(gene_name, perturbation_type, basal, deg):
 
     if perturbation_type == "knock_out":
         basal[idx] = 0.0
-        deg[idx]   = 10.0    # rapid degradation → effectively zero protein
+        deg[idx]   = deg[idx] * 3.0  # moderately increased degradation
         desc = f"{gene_name} knockout (basal→0, deg↑)"
     elif perturbation_type == "overexpress":
         basal[idx] *= 20.0
